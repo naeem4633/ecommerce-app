@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { Link } from 'react-router-dom';
-import products from "./products";
 
-export default function Body() {
+export default function Body({ products }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("");
 
@@ -77,7 +76,7 @@ export default function Body() {
         {filteredProducts.map((product) => (
           <Link key={product.id} to={`/details/${product.id}`} className="text-decoration-none">
             <div className="card m-5 border border-dark" style={{ width: "18rem" }}>
-              <img src={product.image} className="card-img-top" alt="" />
+              <img src="./product.jpg"/*{product.image}*/ className="card-img-top" alt="" />
               <div className="card-body">
                 <div className="d-flex justify-content-between">
                   <h5 className="card-title">{product.name}</h5>

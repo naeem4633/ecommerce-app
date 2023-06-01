@@ -3,15 +3,15 @@ import { Link } from 'react-router-dom';
 import productImage from './product.jpg';
 import heartImage from './heart.png';
 import { useParams } from 'react-router-dom';
-import products from './products';
-import importedCartItems from './cartItems';
+// import products from './products';
+// import importedCartItems from './cartItems';
 
-export default function Details() {
+export default function Details({ products, cartItemsState, wishlistItemsState }) {
     const { id } = useParams();
     const product = products.find((product) => product.id === Number(id));
-  
-    const cartItems = importedCartItems.filter(item => !item.is_wishlist_item);
-    const wishlistItems = importedCartItems.filter(item => item.is_wishlist_item);
+
+    const cartItems = cartItemsState
+    const wishlistItems = wishlistItemsState
   
     const handleAddToCart = () => {
       const newCartItem = {

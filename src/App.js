@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import './App.css';
 import Navbar from './Navbar';
@@ -7,52 +7,102 @@ import Wishlist from './Wishlist';
 import Cart from './Cart';
 import Details from './Details';
 import ConfirmOrder from './ConfirmOrder';
-import products from './products';
-import cartItems from './cartItems';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
-    const initialCartItemsState = cartItems.filter(item => !item.is_wishlist_item);
-    const initialWishlistItemsState = cartItems.filter(item => item.is_wishlist_item);
-  
-    const [cartItemsState, setCartItemsState] = useState(initialCartItemsState);
-    const [wishlistItemsState, setWishlistItemsState] = useState(initialWishlistItemsState);
+  const [products, setProducts] = useState([]);
+  const [cartItemsFromApi, setCartItemsFromApi] = useState([]);
+  const [cartItemsState, setCartItemsState] = useState([]);
+  const [wishlistItemsState, setWishlistItemsState] = useState([]);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const productsResponse = await fetch('http://127.0.0.1:8000/products/');
+      const productsData = await productsResponse.json();
+      setProducts(productsData);
+
+      const cartItemsResponse = await fetch('http://127.0.0.1:8000/cart-items/');
+      const cartItemsData = await cartItemsResponse.json();
+      setCartItemsFromApi(cartItemsData);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  useEffect(() => {
+    const initialCartItemsState = cartItemsFromApi.filter(item => !item.is_wishlist_item);
+    const initialWishlistItemsState = cartItemsFromApi.filter(item => item.is_wishlist_item);
+    setCartItemsState(initialCartItemsState);
+    setWishlistItemsState(initialWishlistItemsState);
+  }, [cartItemsFromApi]);
   
 
   const handleUpdateCartItems = (updatedCartItems) => {
     setCartItemsState(updatedCartItems);
   };
 
-  const handleRemoveFromWishlist = (itemId) => {
-    const updatedWishlistItems = wishlistItemsState.filter(item => item.id !== itemId);
-    setWishlistItemsState(updatedWishlistItems);
+  const handleRemoveFromWishlist = async (itemId) => {
+    try {
+      const updatedWishlistItems = wishlistItemsState.filter(item => item.id !== itemId);
+      setWishlistItemsState(updatedWishlistItems);
+  
+      await fetch(`http://127.0.0.1:8000/cart-items/delete/${itemId}/`, {
+        method: 'DELETE',
+      });
+  
+      console.log('Wishlist item deleted successfully.');
+    } catch (error) {
+      console.error('Error deleting wishlist item:', error);
+    }
   };
 
   const handleAddToCart = (itemId) => {
     const updatedWishlistItems = wishlistItemsState.filter(item => item.id !== itemId);
     setWishlistItemsState(updatedWishlistItems);
-
+  
     const itemToAddToCart = wishlistItemsState.find(item => item.id === itemId);
     if (itemToAddToCart) {
-      console.log('Before adding to cart:', cartItemsState);
-      console.log('Item to add:', itemToAddToCart);
-
+      itemToAddToCart.is_wishlist_item = false;
+  
+      // Update the cart items state with the item to be added to the cart
       const updatedCartItems = [...cartItemsState, itemToAddToCart];
       setCartItemsState(updatedCartItems);
-
-      console.log('After adding to cart:', updatedCartItems);
-    }
-  };
-
+  
+      // Send a request to create the cart item
+      fetch('http://127.0.0.1:8000/cart-items/add/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          product: itemToAddToCart.product,
+          quantity: itemToAddToCart.quantity,
+          is_wishlist_item: false, // Set the boolean value to false
+        }),
+      })
+        .then(response => response.json())
+        .then(data => {
+          // Handle the response if needed
+        })
+        .catch(error => {
+          console.error('Error adding item to cart:', error);
+        });
+      }
+    };
+  
   return (
     <Router>
       <div className="App">
         <Navbar />
         <Routes>
           <Route path="/" element={<Body products={products}/>} />
+          <Route path="/details/:id" element={<Details products={products} cartItemsState={cartItemsState} wishlistItemsState={wishlistItemsState}/>} />
           <Route path="/wishlist" element={<Wishlist wishlistItems={wishlistItemsState} onRemoveFromWishlist={handleRemoveFromWishlist} onAddToCart={handleAddToCart} />} />
           <Route path="/cart" element={<Cart cartItems={cartItemsState} onUpdateCartItems={handleUpdateCartItems} />} />
-          <Route path="/details/:id" element={<Details />} />
           <Route path="/confirmOrder" element={<ConfirmOrder />} />
         </Routes>
       </div>

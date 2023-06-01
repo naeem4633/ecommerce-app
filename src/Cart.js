@@ -23,6 +23,21 @@ export default function Cart({ cartItems, onUpdateCartItems }) {
         const updatedQuantity = item.quantity - 1;
         if (updatedQuantity <= 0) {
           // Remove the item from the cart
+          fetch(`http://127.0.0.1:8000/cart-items/delete/${itemId}/`, {
+            method: 'DELETE',
+          })
+            .then(response => {
+              if (response.ok) {
+                // Remove the item from the cart items state
+                const filteredCartItems = cartItems.filter(item => item.id !== itemId);
+                onUpdateCartItems(filteredCartItems);
+              } else {
+                throw new Error('Error deleting wishlist item');
+              }
+            })
+            .catch(error => {
+              console.error('Error deleting wishlist item:', error);
+            });
           return null;
         } else {
           return {
@@ -33,10 +48,9 @@ export default function Cart({ cartItems, onUpdateCartItems }) {
       }
       return item;
     });
-
+  
     // Remove null values (items with quantity zero) from the updatedCartItems
     const filteredCartItems = updatedCartItems.filter(item => item !== null);
-
     onUpdateCartItems(filteredCartItems);
   };
 
@@ -78,7 +92,7 @@ export default function Cart({ cartItems, onUpdateCartItems }) {
           <div key={item.id} className="card m-5 w-100">
             <div className="card-body d-flex justify-content-between">
               <div className="d-flex align-items-center">
-                <img src={item.product.image} alt="" width="100px" height="100px" />
+                <img src="./product.jpg"/*{item.product.image}*/ alt="" width="100px" height="100px" />
                 <p>{item.product.name}</p>
               </div>
               <div className="d-flex flex-row align-items-center">

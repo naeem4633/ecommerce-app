@@ -22,7 +22,7 @@ export default function Body({ products }) {
   } else if (sortBy === "high_to_low") {
     filteredProducts.sort((a, b) => b.price - a.price);
   }
-
+  
   return (
     <>
       <div className="d-flex justify-content-between my-3 mx-5">
@@ -75,8 +75,8 @@ export default function Body({ products }) {
       <div className="d-flex flex-wrap justify-content-around mx-5 bg-dark">
         {filteredProducts.map((product) => (
           <Link key={product.id} to={`/details/${product.id}`} className="text-decoration-none">
-            <div className="card m-5 border border-dark" style={{ width: "18rem" }}>
-              <img src="./product.jpg"/*{product.image}*/ className="card-img-top" alt="" />
+            <div className="card m-5 border border-dark" style={{ width: "400px" }}>
+              <img src={product.image_path} className="card-img-top w-100" alt=""/>
               <div className="card-body">
                 <div className="d-flex justify-content-between">
                   <h5 className="card-title">{product.name}</h5>

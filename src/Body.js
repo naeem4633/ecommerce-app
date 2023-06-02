@@ -34,12 +34,12 @@ export default function Body({ products }) {
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            <img src="./filter-image.png" alt="" width="25px" height="25px" />
+            <img src="./images/filter-image.png" alt="" width="25px" height="25px" />
           </button>
-          <ul className="dropdown-menu" aria-labelledby="filterDropdown">
+          <ul className="dropdown-menu bg-dark" aria-labelledby="filterDropdown">
             <li>
               <button
-                className="dropdown-item"
+                className="dropdown-item text-white"
                 onClick={handleSort}
                 value="low_to_high"
               >
@@ -48,7 +48,7 @@ export default function Body({ products }) {
             </li>
             <li>
               <button
-                className="dropdown-item"
+                className="dropdown-item text-white"
                 onClick={handleSort}
                 value="high_to_low"
               >

@@ -87,30 +87,34 @@ export default function Cart({ cartItems, onUpdateCartItems }) {
 
   return (
     <>
-      <div className="d-flex flex-wrap m-5 bg-dark justify-content-center">
-        {cartItems.map(item => (
-          <div key={item.id} className="card m-5" style={{ width: 'calc(50% - 20px)' }}>
-            <div className="card-body d-flex justify-content-between">
-              <div className="d-flex align-items-center">
-                <img src={item.product.image_path}/*{item.product.image}*/ alt="" width="100px" height="100px" />
-                <p>{item.product.name}</p>
-              </div>
-              <div className="d-flex flex-row align-items-center">
-                <form>
-                  <button type="button" className="btn btn-dark" onClick={() => handleDecreaseQuantity(item.id)}>-</button>
-                </form>
-                <p>Quantity: {item.quantity}</p>
-                <form>
-                  <button type="button" className="btn btn-dark" onClick={() => handleIncreaseQuantity(item.id)}>+</button>
-                </form>
+      <div className="d-flex m-5 bg-dark flex-column rounded-2">
+        <div className="d-flex flex-wrap justify-content-center rounded-2">
+          {cartItems.map(item => (
+            <div key={item.id} className="card m-5" style={{ width: '45vw' }}>
+              <div className="card-body d-flex justify-content-between">
+                <div className="d-flex align-items-center">
+                  <img className="rounded-2" src={item.product.image_path} alt="" width="100px" height="100px" />
+                  <p className="m-3 h5">{item.product.name}</p>
+                </div>
+                <div className="d-flex flex-row align-items-center">
+                  <form>
+                    <button type="button" className="btn btn-dark" onClick={() => handleDecreaseQuantity(item.id)}>-</button>
+                  </form>
+                  <p className="m-3 h5 pb-1">{item.quantity}</p>
+                  <form>
+                    <button type="button" className="btn btn-dark" onClick={() => handleIncreaseQuantity(item.id)}>+</button>
+                  </form>
+                </div>
               </div>
             </div>
+          ))}
+        </div>
+          <div className="d-flex justify-content-end">
+            <div className="d-flex justify-content-between m-5 border border-dark bg-white rounded-2" style={{ width: '25%' }}>
+              <p className="m-3 fw-bold">Cart Total: ${cartTotal}</p>
+              <button className="btn btn-dark m-2" onClick={handleConfirmOrder}>Confirm Order</button>
+            </div>
           </div>
-        ))}
-      </div>
-      <div className="d-flex justify-content-between flex-row m-5 border border-dark">
-        <p>Cart Total: ${cartTotal}</p>
-        <button className="btn btn-dark" onClick={handleConfirmOrder}>Confirm Order</button>
       </div>
     </>
 

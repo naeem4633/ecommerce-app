@@ -16,7 +16,7 @@ export default function Wishlist({ wishlistItems, onRemoveFromWishlist, onAddToC
         <div key={item.id} className="card m-5" style={{ width: 'calc(50% - 20px)' }}>
           <div className="card-body d-flex justify-content-between">
             <div className="d-flex align-items-center">
-              <img className="rounded-2" src={item.product.image_path}/*{item.product.image}*/ alt="" width="100px" height="100px" />
+              <img className="rounded-2" src={require(`${item.product.image_path}`)} alt="" width="100px" height="100px" />
               <p className="m-3 h5">{item.product.name}</p>
             </div>
             <div className="d-flex flex-row align-items-center">

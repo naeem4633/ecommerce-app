@@ -34,7 +34,7 @@ export default function Body({ products }) {
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            <img src="./images/filter-image.png" alt="" width="25px" height="25px" />
+            <img src={require(`./images/filter-image.png`)} alt="" width="25px" height="25px" />
           </button>
           <ul className="dropdown-menu bg-dark" aria-labelledby="filterDropdown">
             <li>
@@ -59,7 +59,7 @@ export default function Body({ products }) {
         </div>
         <form className="d-flex">
           <input
-            className="form-control me-2"
+            className="form-control me-2 border-2 border-back"
             name="q"
             type="search"
             placeholder="Search"
@@ -76,7 +76,7 @@ export default function Body({ products }) {
         {filteredProducts.map((product) => (
           <Link key={product.id} to={`/details/${product.id}`} className="text-decoration-none">
             <div className="card m-5 border border-dark" style={{ width: "400px" }}>
-              <img src={product.image_path} className="card-img-top w-100" alt=""/>
+              <img src={require(`${product.image_path}`)} className="card-img-top w-100" alt=""/>
               <div className="card-body">
                 <div className="d-flex justify-content-between">
                   <h5 className="card-title">{product.name}</h5>

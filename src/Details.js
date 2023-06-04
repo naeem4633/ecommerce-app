@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import axios from "axios"
 
-export default function Details({ products, cartItemsState, wishlistItemsState }) {
+export default function Details({ products, cartItemsState, wishlistItemsState, handleUpdateCartItems, handleUpdateWishlistItems}) {
     let { id } = useParams();
     let product = products.find((product) => product.id === Number(id));
     
@@ -34,21 +34,22 @@ export default function Details({ products, cartItemsState, wishlistItemsState }
         is_wishlist_item: false,
       };
       const updatedCartItems = [...cartItems, newCartItem];
-      console.log('Updated Cart Items:', updatedCartItems);
-
-      axios.post('http://127.0.0.1:8000/cart-items/add/', newCartItem, {
+      handleUpdateCartItems(updatedCartItems);
+  
+      
+      axios.post('http://127.0.0.1:8000/api/cart-items/add/', newCartItem, {
         headers: {
           'Content-Type': 'application/json',
         },
       })
-        .then(response => {
-          // Handle the response if needed
-          console.log('Created Cart Item:', response.data);
-          // Perform any necessary actions with the response data
-        })
-        .catch(error => {
-          console.error('Error adding item to cart:', error);
-        });
+      .then(response => {
+        // Handle the response if needed
+        console.log('Created Cart Item:', response.data);
+        // Perform any necessary actions with the response data
+      })
+      .catch(error => {
+        console.error('Error adding item to cart:', error);
+      });
     };
     
     const handleAddToWishlist = () => {
@@ -59,9 +60,9 @@ export default function Details({ products, cartItemsState, wishlistItemsState }
       };
       // Update the cartItems state with the new cart item(a wishlist item, is_wishlist_item set to true)
       const updatedWishlistItems = [...wishlistItems, newWishlistItem];
-      console.log('Updated Cart Items:', updatedWishlistItems);
+      handleUpdateWishlistItems(updatedWishlistItems)
 
-      axios.post('http://127.0.0.1:8000/cart-items/add/', newWishlistItem)
+      axios.post('http://127.0.0.1:8000/api/cart-items/add/', newWishlistItem)
         .then(response => {
           // Handle the response if needed
           console.log('Created Wishlist Item:', response.data);

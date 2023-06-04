@@ -23,7 +23,7 @@ export default function Cart({ cartItems, onUpdateCartItems }) {
         const updatedQuantity = item.quantity - 1;
         if (updatedQuantity <= 0) {
           // Remove the item from the cart
-          fetch(`http://127.0.0.1:8000/cart-items/delete/${itemId}/`, {
+          fetch(`http://127.0.0.1:8000/api/cart-items/delete/${itemId}/`, {
             method: 'DELETE',
           })
             .then(response => {
@@ -93,7 +93,7 @@ export default function Cart({ cartItems, onUpdateCartItems }) {
             <div key={item.id} className="card m-5" style={{ width: '45vw' }}>
               <div className="card-body d-flex justify-content-between">
                 <div className="d-flex align-items-center">
-                  <img className="rounded-2" src={item.product.image_path} alt="" width="100px" height="100px" />
+                  <img className="rounded-2" src={require(`${item.product.image_path}`)} alt="" width="100px" height="100px" />
                   <p className="m-3 h5">{item.product.name}</p>
                 </div>
                 <div className="d-flex flex-row align-items-center">

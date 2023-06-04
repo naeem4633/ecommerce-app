@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes} from 'react-router-dom';
+import { HashRouter as Router, Route, Routes} from 'react-router-dom';
 import './App.css';
 import Navbar from './Navbar';
 import Body from './Body';
@@ -21,11 +21,11 @@ function App() {
 
   const fetchData = async () => {
     try {
-      const productsResponse = await fetch('http://127.0.0.1:8000/products/');
+      const productsResponse = await fetch('http://127.0.0.1:8000/api/products/');
       const productsData = await productsResponse.json();
       setProducts(productsData);
 
-      const cartItemsResponse = await fetch('http://127.0.0.1:8000/cart-items/');
+      const cartItemsResponse = await fetch('http://127.0.0.1:8000/api/cart-items/');
       const cartItemsData = await cartItemsResponse.json();
       setCartItemsFromApi(cartItemsData);
     } catch (error) {
@@ -44,13 +44,16 @@ function App() {
   const handleUpdateCartItems = (updatedCartItems) => {
     setCartItemsState(updatedCartItems);
   };
+  const handleUpdateWishlistItems = (updatedWishlistItems) => {
+    setWishlistItemsState(updatedWishlistItems);
+  };
 
   const handleRemoveFromWishlist = async (itemId) => {
     try {
       const updatedWishlistItems = wishlistItemsState.filter(item => item.id !== itemId);
       setWishlistItemsState(updatedWishlistItems);
   
-      await fetch(`http://127.0.0.1:8000/cart-items/delete/${itemId}/`, {
+      await fetch(`http://127.0.0.1:8000/api/cart-items/delete/${itemId}/`, {
         method: 'DELETE',
       });
   
@@ -73,7 +76,7 @@ function App() {
       setCartItemsState(updatedCartItems);
   
       // Send a request to create the cart item
-      fetch('http://127.0.0.1:8000/cart-items/add/', {
+      fetch('http://127.0.0.1:8000/api/cart-items/add/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -100,8 +103,8 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<Body products={products}/>} />
-          <Route path="/details/:id" element={<Details products={products} cartItemsState={cartItemsState} wishlistItemsState={wishlistItemsState}/>} />
-          <Route path="/wishlist" element={<Wishlist wishlistItems={wishlistItemsState} onRemoveFromWishlist={handleRemoveFromWishlist} onAddToCart={handleAddToCart} />} />
+          <Route path="/details/:id" element={<Details products={products} cartItemsState={cartItemsState} handleUpdateCartItems={handleUpdateCartItems} wishlistItemsState={wishlistItemsState} handleUpdateWishlistItems={handleUpdateWishlistItems}/>} />
+          <Route path="/wishlist" element={<Wishlist wishlistItems={wishlistItemsState} onRemoveFromWishlist={handleRemoveFromWishlist} onAddToCart={handleAddToCart}/>} />
           <Route path="/cart" element={<Cart cartItems={cartItemsState} onUpdateCartItems={handleUpdateCartItems} />} />
           <Route path="/confirmOrder" element={<ConfirmOrder />} />
         </Routes>
